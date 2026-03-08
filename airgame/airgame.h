@@ -330,7 +330,20 @@ namespace dll
 		}
 	};
 
+	////////////////////////////////////////////////
 
+	class AIRGAME_API RANDIT
+	{
+	private:
+		std::mt19937* twister{ nullptr };
+
+	public:
+		RANDIT();
+		~RANDIT();
+
+		int operator()(int min, int max);
+		float operator()(float min, float max);
+	};
 
 
 
