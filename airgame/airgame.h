@@ -29,6 +29,19 @@ enum class creatures {
 enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 };
 enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3 };
 
+struct FPOINT
+{
+	float x{ 0 };
+	float y{ 0 };
+};
+struct FRECT
+{
+	float left{ 0 };
+	float up{ 0 };
+	float right{ 0 };
+	float down{ 0 };
+};
+
 namespace dll
 {
 	class AIRGAME_API EXCEPTION
@@ -345,7 +358,35 @@ namespace dll
 		float operator()(float min, float max);
 	};
 
+	class AIRGAME_API PROTON
+	{
+	protected:
+		float _width{ 0 };
+		float _height{ 0 };
 
+	public:
+		FPOINT start{};
+		FPOINT end{};
+		FPOINT center{};
+
+		float x_rad{ 0 };
+		float y_rad{ 0 };
+
+		PROTON();
+		PROTON(float _sx, float _sy);
+		PROTON(float _sx, float _sy, float _s_width, float _s_height);
+
+		virtual ~PROTON();
+
+		float get_width() const;
+		float get_height() const;
+
+		void set_width(float new_width);
+		void set_height(float new_height);
+		void new_dims(float new_width, float new_height);
+
+		void set_edges();
+	};
 
 
 
