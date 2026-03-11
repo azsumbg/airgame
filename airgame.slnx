@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="airgame/airgame.vcxproj" />
+  <Project Path="airgame/airgame.vcxproj" Id="93c4b28d-0e65-4f06-bbea-0f98051b8540" />
 </Solution>

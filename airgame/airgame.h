@@ -27,7 +27,7 @@ enum class creatures {
 	boss1 = 6, boss2 = 7, boss3 = 8
 };
 enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 };
-enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3 };
+enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
 
 struct FPOINT
 {
@@ -376,7 +376,7 @@ namespace dll
 		PROTON(float _sx, float _sy);
 		PROTON(float _sx, float _sy, float _s_width, float _s_height);
 
-		virtual ~PROTON();
+		virtual ~PROTON() {};
 
 		float get_width() const;
 		float get_height() const;
@@ -388,6 +388,23 @@ namespace dll
 		void set_edges();
 	};
 
+	class AIRGAME_API GROUND :public PROTON
+	{
+	protected:
+		float _speed{ 1.0f };
+
+		GROUND(tiles _what_type, float _s_x, float _s_y);
+
+	public:
+		tiles type{ tiles::field };
+		dirs dir{ dirs::down };
+
+		bool move(float gear);
+
+		void Release();
+
+		static GROUND* create(tiles what_type, float s_x, float s_y);
+	};
 
 
 

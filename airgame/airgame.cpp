@@ -139,3 +139,51 @@ void dll::PROTON::set_edges()
 }
 
 ////////////////////////////////////////
+
+// GROUND CLASS ************************
+
+dll::GROUND::GROUND(tiles _what_type, float _s_x, float _s_y) :PROTON(_s_x, _s_y)
+{
+	type = _what_type;
+
+	if (type == tiles::field)new_dims(1000.0f, 750.0f);
+	else new_dims(32.0f, 32.0f);
+}
+
+bool dll::GROUND::move(float gear)
+{
+	float my_speed = 1.0f + gear / 5.0f;
+
+	switch (dir)
+	{
+	case dirs::up:
+		start.y -= my_speed;
+		set_edges();
+		if (end.y <= -scr_height)return false;
+		break;
+
+	case dirs::down:
+		start.y += my_speed;
+		set_edges();
+		if (start.y >= 2.0f * scr_height)return false;
+		break;
+	}
+	
+	return true;
+}
+
+void dll::GROUND::Release()
+{
+	delete this;
+}
+
+dll::GROUND* dll::GROUND::create(tiles what_type, float s_x, float s_y)
+{
+	GROUND* ret{ nullptr };
+	
+	ret = new GROUND(what_type, s_x, s_y);
+
+	return ret;
+}
+
+////////////////////////////////////////
