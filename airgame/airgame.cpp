@@ -187,3 +187,195 @@ dll::GROUND* dll::GROUND::create(tiles what_type, float s_x, float s_y)
 }
 
 ////////////////////////////////////////
+
+
+// POWERUPS CLASS **********************
+
+dll::POWERUPS::POWERUPS(powerups _what, float _sx, float _sy) :PROTON(_sx, _sy, 32.0f, 32.0f)
+{
+	type = _what;
+}
+
+void dll::POWERUPS::set_path(float to_where_x, float to_where_y)
+{
+	move_sx = start.x;
+	move_ex = to_where_x;
+
+	move_sy = start.y;
+	move_ey = to_where_y;
+
+	ver_dir = false;
+	hor_dir = false;
+
+	if (move_sx == move_ex || (move_ex > start.x && move_ex <= end.x))
+	{
+		ver_dir = true;
+		return;
+	}
+	if (move_sy == move_ey || (move_ey > start.y && move_ey <= end.y))
+	{
+		hor_dir = true;
+		return;
+	}
+
+	slope = (move_ey - move_sy) / (move_ex - move_sx);
+	intercept = start.y - start.x * slope;
+}
+
+bool dll::POWERUPS::move(float where_x, float where_y, float gear)
+{
+	float my_speed = _speed + gear / 10.0f;
+
+	set_path(where_x, where_y);
+
+	if (ver_dir)
+	{
+		if (move_ey < move_sy)
+		{
+			start.y -= my_speed;
+			set_edges();
+			if (end.y <= sky - scr_width / 2.0f)return false;
+		}
+		else
+		{
+
+			start.y += my_speed;
+			set_edges();
+			if (start.y >= ground + scr_width / 2.0f)return false;
+		}
+	}
+	else if (hor_dir)
+	{
+		if (move_ex < move_sx)
+		{
+			start.x -= my_speed;
+			set_edges();
+			if (end.x <= - scr_width / 2.0f)return false;
+		}
+		else
+		{
+
+			start.x += my_speed;
+			set_edges();
+			if (start.x >= scr_width + scr_width / 2.0f)return false;
+		}
+	}
+	else if (move_sx > move_ex)
+	{
+		float target_y = 0;
+
+		target_y = center.x * tanf((45.0f + _randit(5.0f, 15.0f)) * 3.14159f / 180.0f);
+		
+		if (move_ey > move_sy)set_path(center.x, center.y + target_y);
+		else set_path(center.x, center.y - target_y);
+
+		if (ver_dir)
+		{
+			if (move_ey < move_sy)
+			{
+				start.y -= my_speed;
+				set_edges();
+				if (end.y <= sky - scr_width / 2.0f)return false;
+			}
+			else
+			{
+
+				start.y += my_speed;
+				set_edges();
+				if (start.y >= ground + scr_width / 2.0f)return false;
+			}
+		}
+		else if (hor_dir)
+		{
+			if (move_ex < move_sx)
+			{
+				start.x -= my_speed;
+				set_edges();
+				if (end.x <= -scr_width / 2.0f)return false;
+			}
+			else
+			{
+
+				start.x += my_speed;
+				set_edges();
+				if (start.x >= scr_width + scr_width / 2.0f)return false;
+			}
+		}
+		else
+		{
+			start.x -= my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (end.y <= sky - scr_width / 2.0f || start.y >= ground + scr_width / 2.0f
+				|| (end.x <= -scr_width / 2.0f || start.x >= scr_width + scr_width / 2.0f))return false;
+		}
+	}
+	else
+	{
+		float target_y = 0;
+
+		target_y = center.x * tanf((45.0f + _randit(5.0f, 15.0f)) * 3.14159f / 180.0f);
+
+		if (move_ey > move_sy)set_path(center.x, center.y + target_y);
+		else set_path(center.x, center.y - target_y);
+
+		if (ver_dir)
+		{
+			if (move_ey < move_sy)
+			{
+				start.y -= my_speed;
+				set_edges();
+				if (end.y <= sky - scr_width / 2.0f)return false;
+			}
+			else
+			{
+
+				start.y += my_speed;
+				set_edges();
+				if (start.y >= ground + scr_width / 2.0f)return false;
+			}
+		}
+		else if (hor_dir)
+		{
+			if (move_ex < move_sx)
+			{
+				start.x -= my_speed;
+				set_edges();
+				if (end.x <= -scr_width / 2.0f)return false;
+			}
+			else
+			{
+
+				start.x += my_speed;
+				set_edges();
+				if (start.x >= scr_width + scr_width / 2.0f)return false;
+			}
+		}
+		else
+		{
+			start.x += my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (end.y <= sky - scr_width / 2.0f || start.y >= ground + scr_width / 2.0f
+				|| (end.x <= -scr_width / 2.0f || start.x >= scr_width + scr_width / 2.0f))return false;
+		}
+	}
+
+	return true;
+}
+
+void dll::POWERUPS::Release()
+{
+	delete this;
+}
+
+dll::POWERUPS* dll::POWERUPS::create(powerups what, float sx, float sy)
+{
+	dll::POWERUPS* ret{ nullptr };
+
+	ret = new POWERUPS(what, sx, sy);
+
+	return ret;
+}
+
+////////////////////////////////////////

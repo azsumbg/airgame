@@ -28,6 +28,8 @@ enum class creatures {
 };
 enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 };
 enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
+enum class powerups { big_gun = 0, rocket = 1, repair = 2, shield = 3 };
+
 
 struct FPOINT
 {
@@ -406,7 +408,37 @@ namespace dll
 		static GROUND* create(tiles what_type, float s_x, float s_y);
 	};
 
+	class AIRGAME_API POWERUPS :public PROTON
+	{
+	private:
+		float _speed{ 1.1f };
 
+		float move_sx = 0;
+		float move_ex = 0;
+		float move_sy = 0;
+		float move_ey = 0;
+
+		bool ver_dir = 0;
+		bool hor_dir = 0;
+		
+		float slope{ 0 };
+		float intercept{ 0 };
+
+		RANDIT _randit{};
+
+		POWERUPS(powerups _what, float _sx, float _sy);
+
+		void set_path(float to_where_x, float to_where_y);
+
+	public:
+		powerups type{ powerups::big_gun };
+		
+		bool move(float where_x, float where_y, float gear);
+
+		void Release();
+
+		static POWERUPS* create(powerups what, float sx, float sy);
+	};
 
 
 
