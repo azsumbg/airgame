@@ -366,6 +366,21 @@ namespace dll
 		float _width{ 0 };
 		float _height{ 0 };
 
+		float _speed{ 1.1f };
+
+		float move_sx = 0;
+		float move_ex = 0;
+		float move_sy = 0;
+		float move_ey = 0;
+
+		bool ver_dir = 0;
+		bool hor_dir = 0;
+
+		float slope{ 0 };
+		float intercept{ 0 };
+
+		RANDIT _randit{};
+		
 	public:
 		FPOINT start{};
 		FPOINT end{};
@@ -388,6 +403,8 @@ namespace dll
 		void new_dims(float new_width, float new_height);
 
 		void set_edges();
+	
+		void set_path(float to_where_x, float to_where_y);
 	};
 
 	class AIRGAME_API GROUND :public PROTON
@@ -411,24 +428,8 @@ namespace dll
 	class AIRGAME_API POWERUPS :public PROTON
 	{
 	private:
-		float _speed{ 1.1f };
-
-		float move_sx = 0;
-		float move_ex = 0;
-		float move_sy = 0;
-		float move_ey = 0;
-
-		bool ver_dir = 0;
-		bool hor_dir = 0;
 		
-		float slope{ 0 };
-		float intercept{ 0 };
-
-		RANDIT _randit{};
-
 		POWERUPS(powerups _what, float _sx, float _sy);
-
-		void set_path(float to_where_x, float to_where_y);
 
 	public:
 		powerups type{ powerups::big_gun };

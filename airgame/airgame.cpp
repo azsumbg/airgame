@@ -138,6 +138,32 @@ void dll::PROTON::set_edges()
 	center.y = start.y + y_rad;
 }
 
+void dll::PROTON::set_path(float to_where_x, float to_where_y)
+{
+	move_sx = start.x;
+	move_ex = to_where_x;
+
+	move_sy = start.y;
+	move_ey = to_where_y;
+
+	ver_dir = false;
+	hor_dir = false;
+
+	if (move_sx == move_ex || (move_ex > start.x && move_ex <= end.x))
+	{
+		ver_dir = true;
+		return;
+	}
+	if (move_sy == move_ey || (move_ey > start.y && move_ey <= end.y))
+	{
+		hor_dir = true;
+		return;
+	}
+
+	slope = (move_ey - move_sy) / (move_ex - move_sx);
+	intercept = start.y - start.x * slope;
+}
+
 ////////////////////////////////////////
 
 // GROUND CLASS ************************
@@ -196,32 +222,6 @@ dll::POWERUPS::POWERUPS(powerups _what, float _sx, float _sy) :PROTON(_sx, _sy, 
 	type = _what;
 }
 
-void dll::POWERUPS::set_path(float to_where_x, float to_where_y)
-{
-	move_sx = start.x;
-	move_ex = to_where_x;
-
-	move_sy = start.y;
-	move_ey = to_where_y;
-
-	ver_dir = false;
-	hor_dir = false;
-
-	if (move_sx == move_ex || (move_ex > start.x && move_ex <= end.x))
-	{
-		ver_dir = true;
-		return;
-	}
-	if (move_sy == move_ey || (move_ey > start.y && move_ey <= end.y))
-	{
-		hor_dir = true;
-		return;
-	}
-
-	slope = (move_ey - move_sy) / (move_ex - move_sx);
-	intercept = start.y - start.x * slope;
-}
-
 bool dll::POWERUPS::move(float where_x, float where_y, float gear)
 {
 	float my_speed = _speed + gear / 10.0f;
@@ -264,7 +264,8 @@ bool dll::POWERUPS::move(float where_x, float where_y, float gear)
 	{
 		float target_y = 0;
 
-		target_y = center.x * tanf((45.0f + _randit(5.0f, 15.0f)) * 3.14159f / 180.0f);
+		if (center.x <= scr_width / 2.0f)target_y = center.x * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
+		else target_y = (scr_width - center.x) * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
 		
 		if (move_ey > move_sy)set_path(center.x, center.y + target_y);
 		else set_path(center.x, center.y - target_y);
