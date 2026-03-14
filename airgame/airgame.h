@@ -405,6 +405,9 @@ namespace dll
 		void set_edges();
 	
 		void set_path(float to_where_x, float to_where_y);
+
+		virtual bool move(float where_x, float where_y, float gear);
+		virtual bool move(float gear) { return false; };
 	};
 
 	class AIRGAME_API GROUND :public PROTON
@@ -418,7 +421,7 @@ namespace dll
 		tiles type{ tiles::field };
 		dirs dir{ dirs::down };
 
-		bool move(float gear);
+		bool move(float gear) override;
 
 		void Release();
 
@@ -434,8 +437,6 @@ namespace dll
 	public:
 		powerups type{ powerups::big_gun };
 		
-		bool move(float where_x, float where_y, float gear);
-
 		void Release();
 
 		static POWERUPS* create(powerups what, float sx, float sy);
