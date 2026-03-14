@@ -29,6 +29,7 @@ enum class creatures {
 enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 };
 enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
 enum class powerups { big_gun = 0, rocket = 1, repair = 2, shield = 3 };
+enum class shots { bullet = 0, blast = 1, rocket = 2 };
 
 
 struct FPOINT
@@ -456,6 +457,22 @@ namespace dll
 		static CLOUDS* create(clouds type, float sx, float sy);
 	};
 
+	class AIRGAME_API SHOTS :public PROTON
+	{
+	private:
+	
+		SHOTS(shots _type, float _sx, float _sy, float _ex, float _ey);
 
+	public:
+		shots type{ shots::bullet };
+		int damage = 0;
+		dirs dir{ dirs::down };
+
+		bool move(float gear)override;
+
+		void Release();
+
+		static SHOTS* create(shots type, float sx, float sy, float ex, float ey);
+	};
 
 }

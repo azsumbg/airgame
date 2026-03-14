@@ -424,3 +424,106 @@ dll::CLOUDS* dll::CLOUDS::create(clouds type, float sx, float sy)
 }
 
 ///////////////////////////////////////
+
+// SHOTS CLASS ************************
+
+dll::SHOTS::SHOTS(shots _type, float _sx, float _sy, float _ex, float _ey) :PROTON(_sx, _sy)
+{
+	type = _type;
+
+	switch (type)
+	{
+	case shots::bullet:
+		new_dims(11.0f, 11.0f);
+		_speed = 5.0f;
+		damage = 10;
+		break;
+
+	case shots::blast:
+		new_dims(25.0f, 22.0f);
+		_speed = 4.0f;
+		damage = 20;
+		break;
+
+	case shots::rocket:
+		new_dims(10.0f, 37.0f);
+		_speed = 4.0f;
+		damage = 50;
+		break;
+	}
+
+	set_path(_ex, _ey);
+
+	if (move_ey < move_sy)dir = dirs::up;
+}
+
+bool dll::SHOTS::move(float gear)
+{
+	float my_speed = _speed + gear / 10.0f;
+
+	if (ver_dir)
+	{
+		if (move_sy > move_ey)
+		{
+			start.y -= my_speed;
+			set_edges();
+			if (start.y <= sky)return false;
+		}
+		else
+		{
+			start.y += my_speed;
+			set_edges();
+			if (end.y >= ground)return false;
+		}
+	}
+	else if (hor_dir)
+	{
+		if (move_sx > move_ex)
+		{
+			start.x -= my_speed;
+			set_edges();
+			if (start.y <= 0)return false;
+		}
+		else
+		{
+			start.x += my_speed;
+			set_edges();
+			if (end.x >= scr_width)return false;
+		}
+	}
+	else
+	{
+		if (move_sx > move_ex)
+		{
+			start.x -= my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (start.x <= 0 || start.y <= sky || end.x >= ground)return false;
+		}
+		else
+		{
+			start.x += my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (end.x >= scr_width || start.y <= sky || end.x >= ground)return false;
+		}
+	}
+
+	return true;
+}
+
+void dll::SHOTS::Release()
+{
+	delete this;
+}
+
+dll::SHOTS* dll::SHOTS::create(shots type, float sx, float sy, float ex, float ey)
+{
+	SHOTS* ret{ nullptr };
+
+	ret = new SHOTS(type, sx, sy, ex, ey);
+
+	return ret;
+}
+
+///////////////////////////////////////
