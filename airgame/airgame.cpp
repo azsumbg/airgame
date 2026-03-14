@@ -357,7 +357,6 @@ dll::GROUND* dll::GROUND::create(tiles what_type, float s_x, float s_y)
 
 ////////////////////////////////////////
 
-
 // POWERUPS CLASS **********************
 
 dll::POWERUPS::POWERUPS(powerups _what, float _sx, float _sy) :PROTON(_sx, _sy, 32.0f, 32.0f)
@@ -380,3 +379,48 @@ dll::POWERUPS* dll::POWERUPS::create(powerups what, float sx, float sy)
 }
 
 ////////////////////////////////////////
+
+// CLOUDS CLASS ***********************
+
+dll::CLOUDS::CLOUDS(clouds _type, float _sx, float _sy) :PROTON(_sx, _sy)
+{
+	type = _type;
+	switch (type)
+	{
+	case clouds::cloud1:
+		new_dims(150.0f, 77.0f);
+		break;
+
+	case clouds::cloud2:
+		new_dims(180.0f, 81.0f);
+		break;
+
+	case clouds::cloud3:
+		new_dims(120.0f, 63.0f);
+		break;
+
+	case clouds::cloud4:
+		new_dims(200.0f, 79.0f);
+		break;
+
+	case clouds::cloud5:
+		new_dims(220.0f, 70.0f);
+		break;
+	}
+}
+
+void dll::CLOUDS::Release()
+{
+	delete this;
+}
+
+dll::CLOUDS* dll::CLOUDS::create(clouds type, float sx, float sy)
+{
+	CLOUDS* ret{ nullptr };
+
+	ret = new CLOUDS(type, sx, sy);
+
+	return ret;
+}
+
+///////////////////////////////////////

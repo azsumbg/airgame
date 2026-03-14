@@ -442,7 +442,19 @@ namespace dll
 		static POWERUPS* create(powerups what, float sx, float sy);
 	};
 
+	class AIRGAME_API CLOUDS :public PROTON
+	{
+	private:
 
+		CLOUDS(clouds _type, float _sx, float _sy);
+
+	public:
+		clouds type{ clouds::cloud1 };
+
+		void Release();
+
+		static CLOUDS* create(clouds type, float sx, float sy);
+	};
 
 
 
