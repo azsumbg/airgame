@@ -31,7 +31,6 @@ enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
 enum class powerups { big_gun = 0, rocket = 1, repair = 2, shield = 3 };
 enum class shots { bullet = 0, blast = 1, rocket = 2 };
 
-
 struct FPOINT
 {
 	float x{ 0 };
@@ -475,4 +474,13 @@ namespace dll
 		static SHOTS* create(shots type, float sx, float sy, float ex, float ey);
 	};
 
+	///////////////////////////////////////////////
+
+	// FUNCTIONS **********************************
+
+	float AIRGAME_API Distance(FPOINT first, FPOINT second);
+	void AIRGAME_API Sort(BAG<FPOINT>& bag, FPOINT ref);
+
+	bool AIRGAME_API Intersect(FRECT first, FRECT second);
+	bool AIRGAME_API Intersect(FPOINT first, FPOINT second, float first_xrad, float second_xrad, float first_yrad, float second_yrad);
 }

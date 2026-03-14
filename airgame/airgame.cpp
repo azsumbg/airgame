@@ -527,3 +527,56 @@ dll::SHOTS* dll::SHOTS::create(shots type, float sx, float sy, float ex, float e
 }
 
 ///////////////////////////////////////
+
+
+
+
+
+
+
+// FUNCTIONS *******************************************************************
+
+float dll::Distance(FPOINT first, FPOINT second)
+{
+	float a{ pow(abs(second.x - first.x), 2) };
+	float b{ pow(abs(second.y - first.y), 2) };
+
+	return static_cast<float>(sqrt(a + b));
+}
+void dll::Sort(BAG<FPOINT>& bag, FPOINT ref)
+{
+	bool is_ok = false;
+
+	if (bag.size() < 2)return;
+
+	while (!is_ok)
+	{
+		is_ok = true;
+		for (size_t i = 0; i < bag.size() - 1; ++i)
+		{
+			if (Distance(bag[i], ref) > Distance(bag[i + 1], ref))
+			{
+				FPOINT temp{ bag[i] };
+				bag[i] = bag[i + 1];
+				bag[i + 1] = temp;
+				is_ok = false;
+			}
+		}
+	}
+}
+
+bool dll::Intersect(FRECT first, FRECT second)
+{
+	if (!(first.left >= second.right || first.right <= second.left
+		|| first.up >= second.down || first.down <= second.up))return true;
+	
+	return false;
+}
+bool dll::Intersect(FPOINT first, FPOINT second, float first_xrad, float second_xrad, float first_yrad, float second_yrad)
+{
+	if (abs(second.x - first.x) <= first_xrad + second_xrad &&
+		abs(second.y - first.y) <= first_yrad + second_yrad)return true;
+	
+	return false;
+}
+
