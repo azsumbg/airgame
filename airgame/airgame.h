@@ -23,8 +23,7 @@ enum class dirs { up = 0, down = 1, left = 2, right = 3, stop = 4 };
 enum class move_dirs { straight = 0, left = 1, right = 2 };
 
 enum class creatures {
-	evil1 = 0, evil2 = 1, evil3 = 2, evil4 = 3, evil5 = 4, hero = 5,
-	boss1 = 6, boss2 = 7, boss3 = 8
+	evil1 = 0, evil2 = 1, evil3 = 2, evil4 = 3, evil5 = 4, boss1 = 5, boss2 = 6, boss3 = 7
 };
 enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 };
 enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
@@ -488,7 +487,6 @@ namespace dll
 
 	public:
 		dirs dir{ dirs::stop };
-		move_dirs orientation{ move_dirs::straight };
 
 		int lifes = 150;
 		int damage = 20;
@@ -499,11 +497,46 @@ namespace dll
 		int get_frame();
 
 		move_dirs get_move_dir()const;
-		void change_move_dir(move_dirs new_move_dir);
+		void set_move_dir(move_dirs new_move_dir);
 
 		void Release();
 
 		static HERO* create(float sx, float sy);
+	};
+
+	class AIRGAME_API EVILS :public PROTON
+	{
+	private:
+		int max_frames = 0;
+		int frame_delay = 0;
+		int max_frame_delay = 0;
+		int current_frame = 0;
+
+		int attack_delay = 0;
+		int max_attack_delay = 0;
+		int damage = 20;
+
+		move_dirs orientation{ move_dirs::straight };
+
+		EVILS(creatures _what_type, float _sx, float _sy);
+
+	public:
+		creatures type{ creatures::evil1 };
+ 
+		int lifes = 150;
+		int armour = 0;
+
+		FPOINT get_target_point()const;
+
+		int get_frame();
+		int attack();
+
+		move_dirs get_move_dir()const;
+		void set_move_dir(move_dirs new_move_dir);
+
+		void Release();
+
+		static EVILS* create(creatures what_type, float sx, float sy);
 	};
 
 	///////////////////////////////////////////////

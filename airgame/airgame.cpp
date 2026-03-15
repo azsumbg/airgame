@@ -587,8 +587,8 @@ int dll::HERO::get_frame()
 	if (frame_delay <= 0)
 	{
 		frame_delay = max_frame_delay;
-		++currnet_frame;
-		if (currnet_frame > max_frames)currnet_frame = 0;
+		++current_frame;
+		if (current_frame > max_frames)current_frame = 0;
 	}
 	
 	return current_frame;
@@ -598,7 +598,7 @@ move_dirs dll::HERO::get_move_dir()const
 {
 	return orientation;
 }
-void dll::HERO::change_move_dir(move_dirs new_move_dir)
+void dll::HERO::set_move_dir(move_dirs new_move_dir)
 {
 	orientation = new_move_dir;
 	current_frame = 0;
@@ -641,9 +641,262 @@ dll::HERO* dll::HERO::create(float sx, float sy)
 
 ///////////////////////////////////////
 
+dll::EVILS::EVILS(creatures _what_type, float _sx, float _sy) :PROTON(_sx, _sy)
+{
+	type = _what_type;
 
+	switch (type)
+	{
+	case creatures::evil1:
+		new_dims(90.0f, 66.0f);
+		_speed = 0.5f;
+		max_frames = 11;
+		frame_delay = 6;	
+		attack_delay = 100;
+		lifes = 100;
+		damage = 8;
+		armour = 0;
+		break;
 
+	case creatures::evil2:
+		new_dims(80.0f, 53.0f);
+		_speed = 0.6f;
+		max_frames = 11;
+		frame_delay = 6;
+		attack_delay = 90;
+		lifes = 80;
+		damage = 6;
+		armour = 0;
+		break;
 
+	case creatures::evil3:
+		new_dims(100.0f, 93.0f);
+		_speed = 0.5f;
+		max_frames = 12;
+		frame_delay = 6;
+		attack_delay = 140;
+		lifes = 150;
+		damage = 12;
+		armour = 0;
+		break;
+
+	case creatures::evil4:
+		new_dims(85.0f, 80.0f);
+		_speed = 0.7f;
+		max_frames = 11;
+		frame_delay = 6;
+		attack_delay = 120;
+		lifes = 110;
+		damage = 9;
+		armour = 0;
+		break;
+
+	case creatures::evil5:
+		new_dims(70.0f, 57.0f);
+		_speed = 0.8f;
+		max_frames = 13;
+		frame_delay = 5;
+		attack_delay = 80;
+		lifes = 80;
+		damage = 5;
+		armour = 0;
+		break;
+
+	case creatures::boss1:
+		new_dims(200.0f, 67.0f);
+		_speed = 0.3f;
+		max_frames = 3;
+		frame_delay = 20;
+		attack_delay = 200;
+		lifes = 350;
+		damage = 40;
+		armour = 5;
+		break;
+
+	case creatures::boss2:
+		new_dims(200.0f, 143.0f);
+		_speed = 0.3f;
+		max_frames = 1;
+		frame_delay = 30;
+		attack_delay = 200;
+		lifes = 330;
+		damage = 35;
+		armour = 3;
+		break;
+
+	case creatures::boss3:
+		new_dims(250.0f, 118.0f);
+		_speed = 0.2f;
+		max_frames = 9;
+		frame_delay = 7;
+		attack_delay = 250;
+		lifes = 400;
+		damage = 50;
+		armour = 8;
+		break;
+	}
+
+	max_frame_delay = frame_delay;
+	max_attack_delay = attack_delay;
+}
+
+FPOINT dll::EVILS::get_target_point()const
+{
+	return FPOINT{ move_ex, move_ey };
+}
+
+int dll::EVILS::get_frame()
+{
+	--frame_delay;
+	if (frame_delay <= 0)
+	{
+		frame_delay = max_frame_delay;
+		++current_frame;
+		if (current_frame > max_frames)current_frame = 0;
+	}
+
+	return current_frame;
+}
+int dll::EVILS::attack()
+{
+	--attack_delay;
+	if (attack_delay <= 0)
+	{
+		attack_delay = max_attack_delay;
+		return damage;
+	}
+	
+	return 0;
+}
+
+move_dirs dll::EVILS::get_move_dir()const
+{
+	return orientation;
+}
+void dll::EVILS::set_move_dir(move_dirs new_move_dir)
+{
+	orientation = new_move_dir;
+	current_frame = 0;
+
+	switch (type)
+	{
+	case creatures::evil1:
+		switch (orientation)
+		{
+		case move_dirs::straight:
+			max_frames = 11;
+			frame_delay = 6;
+			break;
+
+		case move_dirs::left:
+			max_frames = 5;
+			frame_delay = 12;
+			break;
+
+		case move_dirs::right:
+			max_frames = 5;
+			frame_delay = 12;
+			break;
+		}
+		break;
+
+	case creatures::evil2:
+		switch (orientation)
+		{
+		case move_dirs::straight:
+			max_frames = 11;
+			frame_delay = 6;
+			break;
+
+		case move_dirs::left:
+			max_frames = 4;
+			frame_delay = 13;
+			break;
+
+		case move_dirs::right:
+			max_frames = 6;
+			frame_delay = 11;
+			break;
+		}
+		break;
+
+	case creatures::evil3:
+		switch (orientation)
+		{
+		case move_dirs::straight:
+			max_frames = 12;
+			frame_delay = 6;
+			break;
+
+		case move_dirs::left:
+			max_frames = 5;
+			frame_delay = 12;
+			break;
+
+		case move_dirs::right:
+			max_frames = 5;
+			frame_delay = 12;
+			break;
+		}
+		break;
+
+	case creatures::evil4:
+		switch (orientation)
+		{
+		case move_dirs::straight:
+			max_frames = 11;
+			frame_delay = 6;
+			break;
+
+		case move_dirs::left:
+			max_frames = 4;
+			frame_delay = 13;
+			break;
+
+		case move_dirs::right:
+			max_frames = 5;
+			frame_delay = 12;
+			break;
+		}
+		break;
+
+	case creatures::evil5:
+		switch (orientation)
+		{
+		case move_dirs::straight:
+			max_frames = 13;
+			frame_delay = 5;
+			break;
+
+		case move_dirs::left:
+			max_frames = 4;
+			frame_delay = 13;
+			break;
+
+		case move_dirs::right:
+			max_frames = 4;
+			frame_delay = 13;
+			break;
+		}
+		break;
+	}
+
+	max_frame_delay = frame_delay;
+}
+
+void dll::EVILS::Release()
+{
+	delete this;
+}
+
+dll::EVILS* dll::EVILS::create(creatures what_type, float sx, float sy)
+{
+	EVILS* ret{ nullptr };
+	
+	ret = new EVILS(what_type, sx, sy);
+
+	return ret;
+}
 
 // FUNCTIONS *******************************************************************
 
