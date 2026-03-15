@@ -528,7 +528,118 @@ dll::SHOTS* dll::SHOTS::create(shots type, float sx, float sy, float ex, float e
 
 ///////////////////////////////////////
 
+// HERO CLASS *************************
 
+dll::HERO::HERO(float _sx, float _sy) :PROTON(_sx, _sy, 80.0f, 80.0f) 
+{
+	_speed = 10.0f;
+};
+
+bool dll::HERO::move(float gear)
+{
+	float my_speed = _speed + gear;
+
+	switch (dir)
+	{
+	case dirs::left:
+		if (start.x - my_speed >= 0)
+		{
+			start.x -= my_speed;
+			set_edges();
+		}
+		else return false;
+		break;
+
+	case dirs::right:
+		if (end.x + my_speed <= scr_width)
+		{
+			start.x += my_speed;
+			set_edges();
+		}
+		else return false;
+		break;
+
+	case dirs::up:
+		if (start.y - my_speed >= sky)
+		{
+			start.y -= my_speed;
+			set_edges();
+		}
+		else return false;
+		break;
+
+	case dirs::down:
+		if (end.y + my_speed <= ground)
+		{
+			start.y += my_speed;
+			set_edges();
+		}
+		else return false;
+		break;
+	}
+
+	return true;
+}
+
+int dll::HERO::get_frame()
+{
+	--frame_delay;
+	if (frame_delay <= 0)
+	{
+		frame_delay = max_frame_delay;
+		++currnet_frame;
+		if (currnet_frame > max_frames)currnet_frame = 0;
+	}
+	
+	return current_frame;
+}
+
+move_dirs dll::HERO::get_move_dir()const
+{
+	return orientation;
+}
+void dll::HERO::change_move_dir(move_dirs new_move_dir)
+{
+	orientation = new_move_dir;
+	current_frame = 0;
+
+	switch (orientation)
+	{
+	case move_dirs::straight:
+		max_frames = 9;
+		frame_delay = 7;
+		max_frame_delay = 7;
+		break;
+
+	case move_dirs::left:
+		max_frames = 6;
+		frame_delay = 10;
+		max_frame_delay = 10;
+		break;
+
+	case move_dirs::right:
+		max_frames = 6;
+		frame_delay = 10;
+		max_frame_delay = 10;
+		break;
+	}
+}
+
+void dll::HERO::Release()
+{
+	delete this;
+}
+
+dll::HERO* dll::HERO::create(float sx, float sy)
+{
+	HERO* ret{ nullptr };
+	
+	ret = new HERO(sx, sy);
+
+	return ret;
+}
+
+///////////////////////////////////////
 
 
 

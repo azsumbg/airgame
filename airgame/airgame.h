@@ -474,6 +474,38 @@ namespace dll
 		static SHOTS* create(shots type, float sx, float sy, float ex, float ey);
 	};
 
+	class AIRGAME_API HERO :public PROTON
+	{
+	private:
+		int max_frames = 9;
+		int frame_delay = 7;
+		int max_frame_delay = 7;
+		int current_frame = 0;
+		
+		move_dirs orientation{ move_dirs::straight };
+
+		HERO(float _sx, float _sy);
+
+	public:
+		dirs dir{ dirs::stop };
+		move_dirs orientation{ move_dirs::straight };
+
+		int lifes = 150;
+		int damage = 20;
+		int armour = 0;
+
+		bool move(float gear) override;
+
+		int get_frame();
+
+		move_dirs get_move_dir()const;
+		void change_move_dir(move_dirs new_move_dir);
+
+		void Release();
+
+		static HERO* create(float sx, float sy);
+	};
+
 	///////////////////////////////////////////////
 
 	// FUNCTIONS **********************************
