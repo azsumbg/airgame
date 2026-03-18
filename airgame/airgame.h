@@ -29,6 +29,7 @@ enum class clouds { cloud1 = 0, cloud2 = 1, cloud3 = 2, cloud4 = 3, cloud5 = 4 }
 enum class tiles { sea = 0, tree1 = 1, tree2 = 2, tree3 = 3, field = 4 };
 enum class powerups { big_gun = 0, rocket = 1, repair = 2, shield = 3 };
 enum class shots { bullet = 0, blast = 1, rocket = 2 };
+enum class actions { move = 0, shoot = 1, dir_changed = 2 };
 
 struct FPOINT
 {
@@ -548,4 +549,6 @@ namespace dll
 
 	bool AIRGAME_API Intersect(FRECT first, FRECT second);
 	bool AIRGAME_API Intersect(FPOINT first, FPOINT second, float first_xrad, float second_xrad, float first_yrad, float second_yrad);
+
+	actions AIRGAME_API AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_bag, BAG<FPOINT>& other_creatures);
 }

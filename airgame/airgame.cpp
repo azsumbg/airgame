@@ -738,6 +738,11 @@ dll::EVILS::EVILS(creatures _what_type, float _sx, float _sy) :PROTON(_sx, _sy)
 
 	max_frame_delay = frame_delay;
 	max_attack_delay = attack_delay;
+
+	float tx = _randit(0.0f, scr_width);
+
+	if (tx <= scr_width / 2.0f)set_path(scr_width, ground);
+	else set_path(0, ground);
 }
 
 FPOINT dll::EVILS::get_target_point()const
@@ -944,3 +949,71 @@ bool dll::Intersect(FPOINT first, FPOINT second, float first_xrad, float second_
 	return false;
 }
 
+actions dll::AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_bag, BAG<FPOINT>& other_creatures)
+{
+	FPOINT temp_move{ my_unit.get_target_point() };
+	
+	float temp_movex{ temp_move.x };
+	float temp_movey{ temp_move.y };
+
+	actions ret{ actions::move };
+
+	if (!shot_bag.empty())Sort(shot_bag, my_unit.center);
+	if (!other_creatures.empty())Sort(other_creatures, my_unit.center);
+
+	if (Distance(other_creatures[0], my_unit.center) <= 100.0f)
+	{
+		if (other_creatures[0].x > my_unit.center.x)
+		{
+			my_unit.set_path(0, my_unit.start.y);
+			ret = actions::dir_changed;
+		}
+		else if (other_creatures[0].x < my_unit.center.x)
+		{
+			my_unit.set_path(scr_width, my_unit.start.y);
+			ret = actions::dir_changed;
+		}
+		else
+		{
+			if (other_creatures[0].y > my_unit.center.y)
+			{
+				my_unit.set_path(my_unit.start.x, sky);
+				ret = actions::dir_changed;
+			}
+			else
+			{
+				my_unit.set_path(my_unit.start.x, ground);
+				ret = actions::dir_changed;
+			}
+		}
+	}
+	else if (Distance(shot_bag[0], my_unit.center) <= 100.0f)
+	{
+		if (shot_bag[0].x > my_unit.center.x)
+		{
+			my_unit.set_path(0, my_unit.start.y);
+			ret = actions::dir_changed;
+		}
+		else if (shot_bag[0].x < my_unit.center.x)
+		{
+			my_unit.set_path(scr_width, my_unit.start.y);
+			ret = actions::dir_changed;
+		}
+		else
+		{
+			if (shot_bag[0].y > my_unit.center.y)
+			{
+				my_unit.set_path(my_unit.start.x, sky);
+				ret = actions::dir_changed;
+			}
+			else
+			{
+				my_unit.set_path(my_unit.start.x, ground);
+				ret = actions::dir_changed;
+			}
+		}
+	}
+	else if (Distance(hero_center, my_unit.center) <= 200.0f) ret = actions::shoot;
+
+	return ret;
+}
