@@ -907,8 +907,8 @@ dll::EVILS* dll::EVILS::create(creatures what_type, float sx, float sy)
 
 float dll::Distance(FPOINT first, FPOINT second)
 {
-	float a{ pow(abs(second.x - first.x), 2) };
-	float b{ pow(abs(second.y - first.y), 2) };
+	float a = static_cast<float>(pow(abs(second.x - first.x), 2));
+	float b = static_cast<float>(pow(abs(second.y - first.y), 2));
 
 	return static_cast<float>(sqrt(a + b));
 }

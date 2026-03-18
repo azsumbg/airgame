@@ -164,7 +164,7 @@ namespace dll
 		}
 		size_t capacity() const
 		{
-			return max_size();
+			return max_size;
 		}
 		void clear()
 		{
@@ -242,7 +242,7 @@ namespace dll
 					else
 					{
 						++max_size;
-						m_ptr = reinterpret_cast(realloc(m_ptr, max_size * sizeof(T)));
+						m_ptr = reinterpret_cast<T*>(realloc(m_ptr, max_size * sizeof(T)));
 						if (m_ptr == nullptr)throw EXCEPTION(BAG_BAD_PTR);
 						else
 						{
@@ -275,7 +275,7 @@ namespace dll
 					else
 					{
 						++max_size;
-						m_ptr = reinterpret_cast(realloc(m_ptr, max_size * sizeof(T)));
+						m_ptr = reinterpret_cast<T*>(realloc(m_ptr, max_size * sizeof(T)));
 						if (m_ptr == nullptr)throw EXCEPTION(BAG_BAD_PTR);
 						else
 						{
