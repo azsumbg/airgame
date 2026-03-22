@@ -19,6 +19,10 @@ constexpr int BAG_BAD_PTR{ 6001 };
 constexpr int BAG_BAD_INDEX{ 6002 };
 constexpr int BAG_BAD_PARAM{ 6003 };
 
+constexpr char BULLET{ 1 };
+constexpr char BIG_GUN{ 2 };
+constexpr char ROCKET{ 4 };
+
 enum class dirs { up = 0, down = 1, left = 2, right = 3, stop = 4 };
 enum class move_dirs { straight = 0, left = 1, right = 2 };
 
@@ -481,6 +485,8 @@ namespace dll
 		int frame_delay = 7;
 		int max_frame_delay = 7;
 		int current_frame = 0;
+
+		char current_ammo = BULLET;
 		
 		move_dirs orientation{ move_dirs::straight };
 
@@ -493,12 +499,18 @@ namespace dll
 		int damage = 20;
 		int armour = 0;
 
+		bool big_gun_found = false;
+		int rockets_available = 0;
+
 		bool move(float gear) override;
 
 		int get_frame();
 
 		move_dirs get_move_dir()const;
 		void set_move_dir(move_dirs new_move_dir);
+
+		char get_current_ammo() const;
+		bool set_current_ammo(char to_what);
 
 		void Release();
 

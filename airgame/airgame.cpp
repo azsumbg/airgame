@@ -539,27 +539,45 @@ bool dll::HERO::move(float gear)
 {
 	float my_speed = _speed + gear;
 
+	if((orientation==move_dirs::left || orientation == move_dirs::right)
+		&& (dir == dirs::up || dir == dirs::down))
+	{
+		orientation = move_dirs::straight;
+		return true;
+	}
+
 	switch (dir)
 	{
 	case dirs::left:
 		if (start.x - my_speed >= 0)
 		{
+			orientation = move_dirs::left;
 			start.x -= my_speed;
 			set_edges();
 		}
-		else return false;
+		else
+		{
+			orientation = move_dirs::straight;
+			return false;
+		}
 		break;
 
 	case dirs::right:
 		if (end.x + my_speed <= scr_width)
 		{
+			orientation = move_dirs::right;
 			start.x += my_speed;
 			set_edges();
 		}
-		else return false;
+		else
+		{
+			orientation = move_dirs::straight;
+			return false;
+		}
 		break;
 
 	case dirs::up:
+		orientation = move_dirs::straight;
 		if (start.y - my_speed >= sky)
 		{
 			start.y -= my_speed;
@@ -569,6 +587,7 @@ bool dll::HERO::move(float gear)
 		break;
 
 	case dirs::down:
+		orientation = move_dirs::straight;
 		if (end.y + my_speed <= ground)
 		{
 			start.y += my_speed;
@@ -623,6 +642,38 @@ void dll::HERO::set_move_dir(move_dirs new_move_dir)
 		max_frame_delay = 10;
 		break;
 	}
+}
+
+char dll::HERO::get_current_ammo() const
+{
+	return current_ammo;
+}
+bool dll::HERO::set_current_ammo(char to_what)
+{
+	switch (to_what)
+	{
+	case BULLET:
+		current_ammo = to_what;
+		return true;
+
+	case BIG_GUN:
+		if (big_gun_found)
+		{
+			current_ammo = to_what;
+			return true;
+		}
+		break;
+		
+	case ROCKET:
+		if (rockets_available > 0)
+		{
+			current_ammo = to_what;
+			return true;
+		}
+		break;
+	}
+
+	return false;
 }
 
 void dll::HERO::Release()
