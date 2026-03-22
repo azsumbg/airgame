@@ -454,6 +454,7 @@ namespace dll
 
 	public:
 		clouds type{ clouds::cloud1 };
+		dirs dir = dirs::right;
 
 		void Release();
 

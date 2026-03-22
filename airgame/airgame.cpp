@@ -176,14 +176,14 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 		{
 			start.y -= my_speed;
 			set_edges();
-			if (end.y <= sky - scr_width / 2.0f)return false;
+			if (end.y <= sky - scr_height)return false;
 		}
 		else
 		{
 
 			start.y += my_speed;
 			set_edges();
-			if (start.y >= ground + scr_width / 2.0f)return false;
+			if (start.y >= ground + scr_height)return false;
 		}
 	}
 	else if (hor_dir)
@@ -192,14 +192,14 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 		{
 			start.x -= my_speed;
 			set_edges();
-			if (end.x <= -scr_width / 2.0f)return false;
+			if (end.x <= -scr_width)return false;
 		}
 		else
 		{
 
 			start.x += my_speed;
 			set_edges();
-			if (start.x >= scr_width + scr_width / 2.0f)return false;
+			if (start.x >= scr_width + scr_width)return false;
 		}
 	}
 	else if (move_sx > move_ex)
@@ -218,14 +218,14 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			{
 				start.y -= my_speed;
 				set_edges();
-				if (end.y <= sky - scr_width / 2.0f)return false;
+				if (end.y <= sky - scr_height)return false;
 			}
 			else
 			{
 
 				start.y += my_speed;
 				set_edges();
-				if (start.y >= ground + scr_width / 2.0f)return false;
+				if (start.y >= ground + scr_height)return false;
 			}
 		}
 		else if (hor_dir)
@@ -234,14 +234,14 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			{
 				start.x -= my_speed;
 				set_edges();
-				if (end.x <= -scr_width / 2.0f)return false;
+				if (end.x <= -scr_width)return false;
 			}
 			else
 			{
 
 				start.x += my_speed;
 				set_edges();
-				if (start.x >= scr_width + scr_width / 2.0f)return false;
+				if (start.x >= scr_width + scr_width)return false;
 			}
 		}
 		else
@@ -249,8 +249,8 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			start.x -= my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
-			if (end.y <= sky - scr_width / 2.0f || start.y >= ground + scr_width / 2.0f
-				|| (end.x <= -scr_width / 2.0f || start.x >= scr_width + scr_width / 2.0f))return false;
+			if (end.y <= sky - scr_height || start.y >= ground + scr_height
+				|| (end.x <= -scr_width || start.x >= scr_width + scr_width))return false; 
 		}
 	}
 	else
@@ -268,14 +268,13 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			{
 				start.y -= my_speed;
 				set_edges();
-				if (end.y <= sky - scr_width / 2.0f)return false;
+				if (end.y <= sky - scr_height)return false;
 			}
 			else
 			{
-
 				start.y += my_speed;
 				set_edges();
-				if (start.y >= ground + scr_width / 2.0f)return false;
+				if (start.y >= ground + scr_height)return false;
 			}
 		}
 		else if (hor_dir)
@@ -284,14 +283,14 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			{
 				start.x -= my_speed;
 				set_edges();
-				if (end.x <= -scr_width / 2.0f)return false;
+				if (end.x <= -scr_width)return false;
 			}
 			else
 			{
 
 				start.x += my_speed;
 				set_edges();
-				if (start.x >= scr_width + scr_width / 2.0f)return false;
+				if (start.x >= scr_width + scr_width)return false;
 			}
 		}
 		else
@@ -299,8 +298,8 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			start.x += my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
-			if (end.y <= sky - scr_width / 2.0f || start.y >= ground + scr_width / 2.0f
-				|| (end.x <= -scr_width / 2.0f || start.x >= scr_width + scr_width / 2.0f))return false;
+			if (end.y <= sky - scr_height || start.y >= ground + scr_height
+				|| (end.x <= -scr_width || start.x >= scr_width + scr_width))return false;
 		}
 	}
 
@@ -549,10 +548,10 @@ bool dll::HERO::move(float gear)
 	switch (dir)
 	{
 	case dirs::left:
-		if (start.x - my_speed >= 0)
+		if (start.x - my_speed / 10.0f >= 0)
 		{
 			orientation = move_dirs::left;
-			start.x -= my_speed;
+			start.x -= my_speed / 10.0f;
 			set_edges();
 		}
 		else
@@ -563,10 +562,10 @@ bool dll::HERO::move(float gear)
 		break;
 
 	case dirs::right:
-		if (end.x + my_speed <= scr_width)
+		if (end.x + my_speed / 10.0f <= scr_width)
 		{
 			orientation = move_dirs::right;
-			start.x += my_speed;
+			start.x += my_speed / 10.0f;
 			set_edges();
 		}
 		else
@@ -987,8 +986,8 @@ void dll::Sort(BAG<FPOINT>& bag, FPOINT ref)
 
 bool dll::Intersect(FRECT first, FRECT second)
 {
-	if (!(first.left >= second.right || first.right <= second.left
-		|| first.up >= second.down || first.down <= second.up))return true;
+	if (!(first.left > second.right || first.right < second.left
+		|| first.up > second.down || first.down < second.up))return true;
 	
 	return false;
 }
