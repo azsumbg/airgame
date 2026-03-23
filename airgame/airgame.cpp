@@ -209,8 +209,8 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 		if (center.x <= scr_width / 2.0f)target_y = center.x * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
 		else target_y = (scr_width - center.x) * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
 
-		if (move_ey > move_sy)set_path(center.x, center.y + target_y);
-		else set_path(center.x, center.y - target_y);
+		if (move_ey > move_sy)set_path(where_x, center.y + target_y);
+		else set_path(where_x, center.y - target_y);
 
 		if (ver_dir)
 		{
@@ -257,10 +257,11 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 	{
 		float target_y = 0;
 
-		target_y = center.x * tanf((45.0f + _randit(5.0f, 15.0f)) * 3.14159f / 180.0f);
+		if (center.x <= scr_width / 2.0f)target_y = center.x * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
+		else target_y = (scr_width - center.x) * tanf((30.0f + _randit(5.0f, 15.0f)) * (3.14159f / 180.0f));
 
-		if (move_ey > move_sy)set_path(center.x, center.y + target_y);
-		else set_path(center.x, center.y - target_y);
+		if (move_ey > move_sy)set_path(where_x, center.y + target_y);
+		else set_path(where_x, center.y - target_y);
 
 		if (ver_dir)
 		{
@@ -287,7 +288,6 @@ bool dll::PROTON::move(float where_x, float where_y, float gear)
 			}
 			else
 			{
-
 				start.x += my_speed;
 				set_edges();
 				if (start.x >= scr_width + scr_width)return false;
@@ -384,25 +384,31 @@ dll::POWERUPS* dll::POWERUPS::create(powerups what, float sx, float sy)
 dll::CLOUDS::CLOUDS(clouds _type, float _sx, float _sy) :PROTON(_sx, _sy)
 {
 	type = _type;
+	
 	switch (type)
 	{
 	case clouds::cloud1:
+		_speed = 1.5f;
 		new_dims(150.0f, 77.0f);
 		break;
 
 	case clouds::cloud2:
+		_speed = 1.4f;
 		new_dims(180.0f, 81.0f);
 		break;
 
 	case clouds::cloud3:
+		_speed = 1.6f;
 		new_dims(120.0f, 63.0f);
 		break;
 
 	case clouds::cloud4:
+		_speed = 1.4f;
 		new_dims(200.0f, 79.0f);
 		break;
 
 	case clouds::cloud5:
+		_speed = 1.3f;
 		new_dims(220.0f, 70.0f);
 		break;
 	}
@@ -497,14 +503,14 @@ bool dll::SHOTS::move(float gear)
 			start.x -= my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
-			if (start.x <= 0 || start.y <= sky || end.x >= ground)return false;
+			if (end.x <= 0 || start.y <= sky || end.y >= ground)return false;
 		}
 		else
 		{
 			start.x += my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
-			if (end.x >= scr_width || start.y <= sky || end.x >= ground)return false;
+			if (start.x >= scr_width || end.y <= sky || start.y >= ground)return false;
 		}
 	}
 
@@ -1011,33 +1017,38 @@ actions dll::AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_ba
 	if (!shot_bag.empty())Sort(shot_bag, my_unit.center);
 	if (!other_creatures.empty())Sort(other_creatures, my_unit.center);
 
-	if (Distance(other_creatures[0], my_unit.center) <= 100.0f)
+	if (!other_creatures.empty())
 	{
-		if (other_creatures[0].x > my_unit.center.x)
+		if (Distance(other_creatures[0], my_unit.center) <= 100.0f)
 		{
-			my_unit.set_path(0, my_unit.start.y);
-			ret = actions::dir_changed;
-		}
-		else if (other_creatures[0].x < my_unit.center.x)
-		{
-			my_unit.set_path(scr_width, my_unit.start.y);
-			ret = actions::dir_changed;
-		}
-		else
-		{
-			if (other_creatures[0].y > my_unit.center.y)
+			if (other_creatures[0].x > my_unit.center.x)
 			{
-				my_unit.set_path(my_unit.start.x, sky);
+				my_unit.set_path(0, my_unit.start.y);
+				ret = actions::dir_changed;
+			}
+			else if (other_creatures[0].x < my_unit.center.x)
+			{
+				my_unit.set_path(scr_width, my_unit.start.y);
 				ret = actions::dir_changed;
 			}
 			else
 			{
-				my_unit.set_path(my_unit.start.x, ground);
-				ret = actions::dir_changed;
+				if (other_creatures[0].y > my_unit.center.y)
+				{
+					my_unit.set_path(my_unit.start.x, sky);
+					ret = actions::dir_changed;
+				}
+				else
+				{
+					my_unit.set_path(my_unit.start.x, ground);
+					ret = actions::dir_changed;
+				}
 			}
 		}
 	}
-	else if (Distance(shot_bag[0], my_unit.center) <= 100.0f)
+	else if (!shot_bag.empty())
+	{
+		if (Distance(shot_bag[0], my_unit.center) <= 100.0f)
 	{
 		if (shot_bag[0].x > my_unit.center.x)
 		{
@@ -1062,6 +1073,7 @@ actions dll::AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_ba
 				ret = actions::dir_changed;
 			}
 		}
+	}
 	}
 	else if (Distance(hero_center, my_unit.center) <= 200.0f) ret = actions::shoot;
 

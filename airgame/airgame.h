@@ -152,7 +152,7 @@ namespace dll
 		
 		T& operator[](size_t index)
 		{
-			if (index < 0 || index >= next_pos)throw EXCEPTION(BAG_BAD_INDEX);
+			if (index < 0 || index > next_pos)throw EXCEPTION(BAG_BAD_INDEX);
 			if (m_ptr == nullptr)throw EXCEPTION(BAG_BAD_PTR);
 
 			return m_ptr[index];
