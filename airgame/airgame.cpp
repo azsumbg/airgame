@@ -1075,7 +1075,24 @@ actions dll::AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_ba
 		}
 	}
 	}
-	else if (Distance(hero_center, my_unit.center) <= 200.0f) ret = actions::shoot;
+	else if (Distance(hero_center, my_unit.center) <= 400.0f) ret = actions::shoot;
+	else
+	{
+		if (my_unit.start.x <= 0)
+		{
+			my_unit.set_path(scr_width, 2.5f * scr_height);
+			my_unit.set_move_dir(move_dirs::right);
+		}
+		else
+		{
+			if (my_unit.end.x >= scr_width)
+			{
+				my_unit.set_path(0, 2.5f * scr_height);
+				my_unit.set_move_dir(move_dirs::left);
+			}
+		}
+	}
+
 
 	return ret;
 }
