@@ -548,6 +548,8 @@ namespace dll
 		move_dirs get_move_dir()const;
 		void set_move_dir(move_dirs new_move_dir);
 
+		bool move(float where_x, float where_y, float gear) override;
+
 		void Release();
 
 		static EVILS* create(creatures what_type, float sx, float sy);

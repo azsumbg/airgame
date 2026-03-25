@@ -945,6 +945,61 @@ void dll::EVILS::set_move_dir(move_dirs new_move_dir)
 	max_frame_delay = frame_delay;
 }
 
+bool dll::EVILS::move(float where_x, float where_y, float gear)
+{
+	float my_speed = _speed + gear / 10.0f;
+
+	if (ver_dir)
+	{
+		if (move_sy > move_ey)
+		{
+			start.y -= my_speed;
+			set_edges();
+			if (start.y <= sky)return false;
+		}
+		else
+		{
+			start.y += my_speed;
+			set_edges();
+			if (end.y >= ground)return false;
+		}
+	}
+	else if (hor_dir)
+	{
+		if (move_sx > move_ex)
+		{
+			start.x -= my_speed;
+			set_edges();
+			if (start.y <= 0)return false;
+		}
+		else
+		{
+			start.x += my_speed;
+			set_edges();
+			if (end.x >= scr_width)return false;
+		}
+	}
+	else
+	{
+		if (move_sx > move_ex)
+		{
+			start.x -= my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (end.x <= 0 || start.y <= sky || end.y >= ground)return false;
+		}
+		else
+		{
+			start.x += my_speed;
+			start.y = start.x * slope + intercept;
+			set_edges();
+			if (start.x >= scr_width || end.y <= sky || start.y >= ground)return false;
+		}
+	}
+
+	return true;
+}
+
 void dll::EVILS::Release()
 {
 	delete this;
@@ -1075,7 +1130,7 @@ actions dll::AINextMove(EVILS& my_unit, FPOINT hero_center, BAG<FPOINT>& shot_ba
 		}
 	}
 	}
-	else if (Distance(hero_center, my_unit.center) <= 400.0f) ret = actions::shoot;
+	else if (Distance(hero_center, my_unit.center) <= 250.0f) ret = actions::shoot;
 	else
 	{
 		if (my_unit.start.x <= 0)
