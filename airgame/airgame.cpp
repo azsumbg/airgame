@@ -763,7 +763,7 @@ dll::EVILS::EVILS(creatures _what_type, float _sx, float _sy) :PROTON(_sx, _sy)
 		_speed = 0.3f;
 		max_frames = 3;
 		frame_delay = 20;
-		attack_delay = 200;
+		attack_delay = 100;
 		lifes = 350;
 		damage = 40;
 		armour = 5;
@@ -774,7 +774,7 @@ dll::EVILS::EVILS(creatures _what_type, float _sx, float _sy) :PROTON(_sx, _sy)
 		_speed = 0.3f;
 		max_frames = 1;
 		frame_delay = 30;
-		attack_delay = 200;
+		attack_delay = 100;
 		lifes = 330;
 		damage = 35;
 		armour = 3;
@@ -785,7 +785,7 @@ dll::EVILS::EVILS(creatures _what_type, float _sx, float _sy) :PROTON(_sx, _sy)
 		_speed = 0.2f;
 		max_frames = 9;
 		frame_delay = 7;
-		attack_delay = 250;
+		attack_delay = 120;
 		lifes = 400;
 		damage = 50;
 		armour = 8;
@@ -951,6 +951,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 
 	if (ver_dir)
 	{
+		orientation = move_dirs::straight;
 		if (move_sy > move_ey)
 		{
 			start.y -= my_speed;
@@ -966,6 +967,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 	}
 	else if (hor_dir)
 	{
+		orientation = move_dirs::straight;
 		if (move_sx > move_ex)
 		{
 			start.x -= my_speed;
@@ -983,6 +985,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 	{
 		if (move_sx > move_ex)
 		{
+			orientation = move_dirs::left;
 			start.x -= my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
@@ -990,6 +993,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 		}
 		else
 		{
+			orientation = move_dirs::right;
 			start.x += my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
