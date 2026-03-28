@@ -951,7 +951,8 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 
 	if (ver_dir)
 	{
-		orientation = move_dirs::straight;
+		if (orientation != move_dirs::straight)set_move_dir(move_dirs::straight);
+		
 		if (move_sy > move_ey)
 		{
 			start.y -= my_speed;
@@ -967,15 +968,17 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 	}
 	else if (hor_dir)
 	{
-		orientation = move_dirs::straight;
 		if (move_sx > move_ex)
 		{
+			if (orientation != move_dirs::left)set_move_dir(move_dirs::left);
+
 			start.x -= my_speed;
 			set_edges();
 			if (start.y <= 0)return false;
 		}
 		else
 		{
+			if (orientation != move_dirs::right)set_move_dir(move_dirs::right);
 			start.x += my_speed;
 			set_edges();
 			if (end.x >= scr_width)return false;
@@ -985,7 +988,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 	{
 		if (move_sx > move_ex)
 		{
-			orientation = move_dirs::left;
+			if (orientation != move_dirs::left)set_move_dir(move_dirs::left);
 			start.x -= my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
@@ -993,7 +996,7 @@ bool dll::EVILS::move(float where_x, float where_y, float gear)
 		}
 		else
 		{
-			orientation = move_dirs::right;
+			if (orientation != move_dirs::right)set_move_dir(move_dirs::right);
 			start.x += my_speed;
 			start.y = start.x * slope + intercept;
 			set_edges();
